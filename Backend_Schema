@@ -1,8 +1,9 @@
--- Table for roles 
+-- Table for roles
 CREATE TABLE Role (
     RoleID INT PRIMARY KEY IDENTITY(1,1), -- Auto-incremented unique identifier for roles
     RoleName VARCHAR(50) NOT NULL UNIQUE  -- Name of the role (e.g., Admin, Employee)
 );
+
 
 -- Table for users
 CREATE TABLE Users (
@@ -14,7 +15,8 @@ CREATE TABLE Users (
     FOREIGN KEY (RoleID) REFERENCES Role(RoleID)
 );
 
--- Many-to-many relationship between Users and Roles 
+
+-- Many-to-many relationship between Users and Roles
 CREATE TABLE UserRole (
     UserID INT,                            -- Foreign key referencing Users
     RoleID INT,                            -- Foreign key referencing Role
@@ -24,7 +26,17 @@ CREATE TABLE UserRole (
 );
 
 
--- Table for vehicles (integrated data)
+-- Table for customers
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY IDENTITY(1,1), -- Auto-incremented unique identifier for customers
+    Name VARCHAR(50) NOT NULL,                -- Customer's name
+    Email VARCHAR(100) UNIQUE,                -- Optional: Unique email for the customer
+    Phone VARCHAR(20)                         -- Optional: Contact number
+);
+
+
+
+-- Table for vehicles
 CREATE TABLE Vehicle (
     VehicleID INT PRIMARY KEY IDENTITY(1,1), -- Auto-incremented unique identifier for a vehicle
     Make VARCHAR(50) NOT NULL,               -- Manufacturer of the vehicle
@@ -36,6 +48,7 @@ CREATE TABLE Vehicle (
 );
 
 
+-- Service mechanics table
 CREATE TABLE Mechanic (
     MechanicID INT PRIMARY KEY IDENTITY(1,1), -- Auto-incremented unique identifier for a mechanic
     Name VARCHAR(50) NOT NULL,                -- Mechanic's name
@@ -43,7 +56,7 @@ CREATE TABLE Mechanic (
 );
 
 
-
+-- Service records table
 CREATE TABLE ServiceRecord (
     ServiceID INT PRIMARY KEY IDENTITY(1,1),  -- Auto-incremented unique identifier for a service
     VehicleID INT NOT NULL,                   -- Foreign key referencing Vehicle
@@ -56,8 +69,7 @@ CREATE TABLE ServiceRecord (
 );
 
 
-
--- Table for maintenance schedules 
+-- Table for maintenance schedules
 CREATE TABLE MaintenanceSchedule (
     ScheduleID INT PRIMARY KEY IDENTITY(1,1), -- Auto-incremented unique identifier for the schedule
     VehicleID INT NOT NULL,                   -- Foreign key referencing Vehicle
@@ -66,9 +78,7 @@ CREATE TABLE MaintenanceSchedule (
     FOREIGN KEY (VehicleID) REFERENCES Vehicle(VehicleID) ON DELETE CASCADE
 );
 
-
-
--- Table for reports 
+-- Table for reports
 CREATE TABLE Report (
     ReportID INT PRIMARY KEY IDENTITY(1,1), -- Auto-incremented unique identifier for a report
     VehicleID INT NOT NULL,                 -- Foreign key referencing Vehicle
@@ -78,8 +88,7 @@ CREATE TABLE Report (
     FOREIGN KEY (VehicleID) REFERENCES Vehicle(VehicleID) ON DELETE CASCADE
 );
 
-
--- Table for dashboard activities 
+-- Table for dashboard activities
 CREATE TABLE Dashboard (
     ActivityID INT PRIMARY KEY IDENTITY(1,1), -- Auto-incremented unique identifier for the activity
     ActivityType VARCHAR(50) NOT NULL,        -- Type of activity (e.g., Pending, Ongoing)
