@@ -1,0 +1,26 @@
+--BackEnd Rows/Records
+
+-- Insert roles into Role table
+INSERT INTO Role (RoleName)
+VALUES 
+    ('Admin'),
+    ('Employee');
+
+-- Insert users into Users table
+INSERT INTO Users (Username, Password, Email, RoleID)
+VALUES 
+    ('john_admin', 'password123', 'john@sample.com', 1),
+    ('alice_admin', 'password123', 'alice@sample.com', 1),
+    ('mark_admin', 'password123', 'mark@sample.com', 1),
+    ('tom_mech', 'password123', 'tom@sample.com', 2),
+    ('jane_mech', 'password123', 'jane@sample.com', 2),
+    ('bob_mech', 'password123', 'bob@sample.com', 2),
+    ('kate_mech', 'password123', 'kate@sample.com', 2),
+    ('mike_mech', 'password123', 'mike@sample.com', 2);
+
+
+-- Insert user-role mappings
+INSERT INTO UserRole (UserID, RoleID)
+VALUES 
+    (1, 1), (2, 1), (3, 1), 
+    (4, 2), (5, 2), (6, 2), (7, 2), (8, 2);
