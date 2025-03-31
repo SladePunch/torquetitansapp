@@ -1,0 +1,19 @@
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">oracle.jdbc.OracleDriver</property>
+        <property name="hibernate.connection.url">jdbc:oracle:thin:@calvin.humber.ca:1521:grok</property>
+        <property name="hibernate.connection.username">n01680074</property>
+        <property name="hibernate.connection.password">oracle</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.hbm2ddl.auto">none</property>
+        <property name="hibernate.connection.provider_class">org.hibernate.hikaricp.internal.HikariCPConnectionProvider</property>
+        <property name="hibernate.hikari.minimumIdle">5</property>
+        <property name="hibernate.hikari.maximumPoolSize">10</property>
+        <property name="hibernate.hikari.idleTimeout">30000</property>
+        <mapping class="GarageApp.model.Role"/>
+        <mapping class="GarageApp.model.User"/>
+        <mapping class="GarageApp.model.Mechanic"/>
+        <mapping class="GarageApp.model.Vehicle"/>
+        <mapping class="GarageApp.model.ServiceRecord"/>
+    </session-factory>
+</hibernate-configuration>

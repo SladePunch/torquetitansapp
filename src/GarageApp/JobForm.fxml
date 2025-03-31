@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox fx:controller="GarageApp.JobFormController" spacing="10" alignment="CENTER" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+   <children>
+      <Label fx:id="titleLabel" text="Add Service Record" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+      <Label text="Service Type:" />
+      <TextField fx:id="serviceTypeField" />
+      <Label text="Status:" />
+      <ChoiceBox fx:id="statusChoiceBox" prefWidth="150.0" />
+      <Label text="Mechanic ID:" />
+      <TextField fx:id="mechanicIdField" />
+      <Label text="Vehicle ID:" />
+      <TextField fx:id="vehicleIdField" />
+      <Label fx:id="errorLabel" text="" style="-fx-text-fill: red;" />
+      <HBox spacing="10" alignment="CENTER">
+         <Button fx:id="saveButton" text="Save" />
+         <Button fx:id="cancelButton" text="Cancel" />
+      </HBox>
+   </children>
+</VBox>
