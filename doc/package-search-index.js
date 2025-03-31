@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"GarageApp"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.vehiclemaintenance"},{"l":"com.vehiclemaintenance.controller"},{"l":"com.vehiclemaintenance.dao"},{"l":"com.vehiclemaintenance.entity"}];updateSearchResults();

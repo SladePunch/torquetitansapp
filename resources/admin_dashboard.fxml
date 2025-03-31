@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.vehiclemaintenance.controller.AdminDashboardController" spacing="10">
+    <children>
+        <HBox spacing="10">
+            <Button text="View Jobs" onAction="#showJobs"/>
+            <Button text="Manage Customers" onAction="#showCustomers"/>
+            <Button text="Manage Vehicles" onAction="#showVehicles"/>
+            <Button text="Logout" onAction="#logout"/>
+        </HBox>
+        <HBox spacing="10">
+            <Label fx:id="totalServicesLabel" text="Total Services Completed: 0"/>
+            <Label fx:id="mostRequestedLabel" text="Most Requested Service: N/A"/>
+        </HBox>
+        <Label text="Recent Completed Services"/>
+        <TableView fx:id="servicesTable">
+            <columns>
+                <TableColumn fx:id="serviceIdColumn" text="Service ID"/>
+                <TableColumn fx:id="vehiclePlateColumn" text="Vehicle (Plate)"/>
+                <TableColumn fx:id="serviceTypeColumn" text="Service Type"/>
+                <TableColumn fx:id="mechanicColumn" text="Mechanic"/>
+                <TableColumn fx:id="dateColumn" text="Date"/>
+            </columns>
+        </TableView>
+        <Label text="List of Customers"/>
+        <TableView fx:id="customersTable">
+            <columns>
+                <TableColumn fx:id="customerIdColumn" text="Customer ID"/>
+                <TableColumn fx:id="nameColumn" text="Name"/>
+                <TableColumn fx:id="contactInfoColumn" text="Contact Info"/>
+                <TableColumn fx:id="vehiclesCountColumn" text="# Vehicles"/>
+            </columns>
+        </TableView>
+        <HBox spacing="10">
+            <Button text="Add Customer" onAction="#addCustomer"/>
+            <Button text="Edit Customer" onAction="#editCustomer"/>
+            <Button text="Delete Customer" onAction="#deleteCustomer"/>
+        </HBox>
+        <Label text="Customer &amp; Vehicle Details"/> <!-- Fixed line -->
+        <TextArea fx:id="customerVehicleDetailsArea" editable="false"/>
+    </children>
+</VBox>

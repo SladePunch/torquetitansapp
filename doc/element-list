@@ -1,1 +1,4 @@
-GarageApp
+com.vehiclemaintenance
+com.vehiclemaintenance.controller
+com.vehiclemaintenance.dao
+com.vehiclemaintenance.entity

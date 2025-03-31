@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.vehiclemaintenance.controller.SearchVehiclesController" spacing="10">
+    <children>
+        <Label text="Search Vehicles"/>
+        <TextField fx:id="searchField" promptText="Enter customer name" onAction="#searchVehicles"/>
+        <Label text="Results:"/>
+        <TableView fx:id="vehiclesTable">
+            <columns>
+                <TableColumn fx:id="customerColumn" text="Customer"/>
+                <TableColumn fx:id="vehiclePlateColumn" text="Vehicle (Plate)"/>
+                <TableColumn fx:id="modelColumn" text="Model"/>
+                <TableColumn fx:id="lastServiceColumn" text="Last Service"/>
+            </columns>
+        </TableView>
+        <HBox spacing="10">
+            <Button text="View Details" onAction="#viewDetails"/>
+            <Button text="Back" onAction="#goBack"/>
+        </HBox>
+    </children>
+</VBox>
