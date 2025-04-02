@@ -16,7 +16,7 @@
         <!-- Entity classes -->
 		<mapping class="com.vehiclemaintenance.entity.Role"/>
         <mapping class="com.vehiclemaintenance.entity.Users"/>
-        <mapping class="com.vehiclemaintenance.entity.Customers"/>
+        <mapping class="com.vehiclemaintenance.entity.Customer"/>
         <mapping class="com.vehiclemaintenance.entity.Vehicle"/>
         <mapping class="com.vehiclemaintenance.entity.Mechanic"/>
         <mapping class="com.vehiclemaintenance.entity.ServiceRecord"/>

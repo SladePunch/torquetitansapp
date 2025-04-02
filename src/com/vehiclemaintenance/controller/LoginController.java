@@ -31,10 +31,15 @@ public class LoginController {
         }
 
         Stage stage = (Stage) usernameField.getScene().getWindow();
-        String roleName = user.getRole().getRoleName();
-        String fxmlFile = roleName.equals("Admin") ? "/admin_dashboard.fxml" : "/mechanic_dashboard.fxml";
-        Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
-        stage.setScene(new Scene(root));
-        stage.setUserData(user); // Store user for later use
+        String role = user.getRole().getRoleName();
+        Parent root;
+        if ("Admin".equals(role)) {
+            root = FXMLLoader.load(getClass().getResource("/admin_dashboard.fxml"));
+        } else {
+            root = FXMLLoader.load(getClass().getResource("/mechanic_dashboard.fxml"));
+        }
+        stage.setUserData(user);
+        stage.setScene(new Scene(root, 800, 600)); // Set consistent size
+        stage.setTitle(role + " Dashboard");
     }
 }

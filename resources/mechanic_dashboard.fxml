@@ -3,27 +3,28 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.vehiclemaintenance.controller.MechanicDashboardController" spacing="10">
+      fx:controller="com.vehiclemaintenance.controller.MechanicDashboardController" spacing="10" prefWidth="800">
     <children>
-        <HBox spacing="10">
-            <Button text="View My Tasks" onAction="#showTasks"/>
-            <Button text="Search Vehicle" onAction="#showSearch"/>
+        <HBox spacing="10" alignment="CENTER">
             <Button text="Logout" onAction="#logout"/>
         </HBox>
-        <Label text="My Assigned Tasks"/>
-        <TableView fx:id="tasksTable">
+        <HBox spacing="10">
+            <TextField fx:id="searchField" promptText="Search by Plate, Service, or Owner" onAction="#searchTasks"/>
+            <Button text="Search" onAction="#searchTasks"/>
+            <Button text="Clear Search" onAction="#clearSearch"/>
+        </HBox>
+        <Label text="Assigned Tasks"/>
+        <TableView fx:id="tasksTable" prefWidth="780">
             <columns>
-                <TableColumn fx:id="taskIdColumn" text="Task ID"/>
-                <TableColumn fx:id="vehiclePlateColumn" text="Vehicle (Plate)"/>
-                <TableColumn fx:id="serviceTypeColumn" text="Service Type"/>
-                <TableColumn fx:id="statusColumn" text="Status"/>
+                <TableColumn fx:id="vehiclePlateColumn" text="Vehicle (Plate)" prefWidth="200"/>
+                <TableColumn fx:id="serviceTypeColumn" text="Service Type" prefWidth="300"/>
+                <TableColumn fx:id="statusColumn" text="Status" prefWidth="150"/>
             </columns>
         </TableView>
         <HBox spacing="10">
             <Button text="Update Status" onAction="#updateStatus"/>
-            <Button text="View Vehicle Details" onAction="#viewVehicleDetails"/>
         </HBox>
         <Label text="Vehicle Details"/>
-        <TextArea fx:id="vehicleDetailsArea" editable="false"/>
+        <TextArea fx:id="vehicleDetailsArea" editable="false" prefWidth="780" prefHeight="150"/>
     </children>
 </VBox>

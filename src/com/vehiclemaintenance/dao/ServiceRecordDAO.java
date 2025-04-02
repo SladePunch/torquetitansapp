@@ -12,7 +12,7 @@ public class ServiceRecordDAO {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query<ServiceRecord> query = session.createQuery(
                 "FROM ServiceRecord sr ORDER BY sr.serviceDate DESC", ServiceRecord.class);
-            query.setMaxResults(4); // Recent 4 services
+            query.setMaxResults(4);
             return query.list();
         }
     }
@@ -22,6 +22,31 @@ public class ServiceRecordDAO {
             Query<ServiceRecord> query = session.createQuery(
                 "FROM ServiceRecord sr WHERE sr.mechanic.mechanicId = :mechanicId", ServiceRecord.class);
             query.setParameter("mechanicId", mechanicId);
+            return query.list();
+        }
+    }
+
+    public void updateServiceRecord(ServiceRecord serviceRecord) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.beginTransaction();
+            session.update(serviceRecord);
+            session.getTransaction().commit();
+        }
+    }
+
+    public void addServiceRecord(ServiceRecord serviceRecord) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.beginTransaction();
+            session.save(serviceRecord);
+            session.getTransaction().commit();
+        }
+    }
+
+    public List<ServiceRecord> getServiceRecordsByVehicle(Long vehicleId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<ServiceRecord> query = session.createQuery(
+                "FROM ServiceRecord sr WHERE sr.vehicle.vehicleId = :vehicleId", ServiceRecord.class);
+            query.setParameter("vehicleId", vehicleId);
             return query.list();
         }
     }
