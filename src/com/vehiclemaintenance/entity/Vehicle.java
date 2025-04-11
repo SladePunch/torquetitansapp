@@ -5,33 +5,36 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Vehicle")
 public class Vehicle {
+
     @Id
-    @Column(name = "VehicleID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vehicle_seq")
+    @SequenceGenerator(name = "vehicle_seq", sequenceName = "Vehicle_seq", allocationSize = 1)
     private Long vehicleId;
 
-    @Column(name = "Make")
-    private String make;
-
-    @Column(name = "Model")
-    private String model;
-
-    @Column(name = "Year")
-    private int year;
-
-    @Column(name = "LicensePlate")
-    private String licensePlate;
-
-    @ManyToOne
-    @JoinColumn(name = "OwnerID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "OwnerID", nullable = false)
     private Customer owner;
 
-    // Getters and Setters
+    private String make;
+    private String model;
+    private Integer year;
+    private String licensePlate;
+
+    // Getters and setters
     public Long getVehicleId() {
         return vehicleId;
     }
 
     public void setVehicleId(Long vehicleId) {
         this.vehicleId = vehicleId;
+    }
+
+    public Customer getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Customer owner) {
+        this.owner = owner;
     }
 
     public String getMake() {
@@ -50,11 +53,11 @@ public class Vehicle {
         this.model = model;
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 
@@ -64,13 +67,5 @@ public class Vehicle {
 
     public void setLicensePlate(String licensePlate) {
         this.licensePlate = licensePlate;
-    }
-
-    public Customer getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Customer owner) {
-        this.owner = owner;
     }
 }

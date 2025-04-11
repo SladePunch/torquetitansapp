@@ -1,30 +1,32 @@
 package com.vehiclemaintenance.entity;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
-@Table(name = "ServiceRecord")
+@Table(name = "SERVICERECORD")
 public class ServiceRecord {
     @Id
-    @Column(name = "ServiceID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "servicerecord_seq")
+    @SequenceGenerator(name = "servicerecord_seq", sequenceName = "SERVICERECORD_SEQ", allocationSize = 1)
+    @Column(name = "SERVICEID")
     private Long serviceId;
 
     @ManyToOne
-    @JoinColumn(name = "VehicleID")
+    @JoinColumn(name = "VEHICLEID")
     private Vehicle vehicle;
 
-    @Column(name = "ServiceDate")
+    @Column(name = "SERVICEDATE")
     private Date serviceDate;
 
-    @Column(name = "Description")
+    @Column(name = "DESCRIPTION")
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "MechanicID")
+    @JoinColumn(name = "ASSIGNEDMECHANICID")
     private Mechanic mechanic;
 
-    @Column(name = "Status")
+    @Column(name = "STATUS")
     private String status;
 
     // Getters and Setters

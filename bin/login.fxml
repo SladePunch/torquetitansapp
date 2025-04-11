@@ -3,12 +3,14 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.vehiclemaintenance.controller.LoginController" spacing="10" alignment="CENTER">
+      fx:controller="com.vehiclemaintenance.controller.LoginController" spacing="10" alignment="CENTER" style="-fx-background-color: linear-gradient(to bottom, #4A90E2, #1E3A8A); -fx-padding: 50 20 20 20;">
     <children>
-        <Label text="Login" style="-fx-font-size: 20px;"/>
-        <TextField fx:id="usernameField" promptText="Username"/>
-        <PasswordField fx:id="passwordField" promptText="Password"/>
-        <Button text="Login" onAction="#handleLogin"/>
-        <Label fx:id="errorLabel" style="-fx-text-fill: red;" visible="false"/>
+        <Label text="Login" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 2);"/>
+        <VBox fx:id="loginPane" spacing="15" alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5);">
+            <TextField fx:id="usernameField" promptText="Username" style="-fx-background-color: #F5F5F5; -fx-background-radius: 5; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-padding: 8;"/>
+            <PasswordField fx:id="passwordField" promptText="Password" style="-fx-background-color: #F5F5F5; -fx-background-radius: 5; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-padding: 8;"/>
+            <Button text="Login" onAction="#handleLogin" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 10 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"/>
+            <Label fx:id="errorLabel" style="-fx-text-fill: #D32F2F; -fx-font-size: 12px;" visible="false"/>
+        </VBox>
     </children>
 </VBox>

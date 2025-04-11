@@ -6,18 +6,19 @@ import javax.persistence.*;
 @Table(name = "Mechanic")
 public class Mechanic {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mechanic_seq")
-    @SequenceGenerator(name = "mechanic_seq", sequenceName = "Mechanic_SEQ", allocationSize = 1)
+    @Column(name = "MechanicID")
     private Long mechanicId;
 
-    @Column(name = "Name", nullable = false)
+    @Column(name = "Name")
     private String name;
 
     @Column(name = "ContactInfo")
     private String contactInfo;
 
+    // Constructors
     public Mechanic() {}
 
+    // Getters and Setters
     public Long getMechanicId() { return mechanicId; }
     public void setMechanicId(Long mechanicId) { this.mechanicId = mechanicId; }
     public String getName() { return name; }

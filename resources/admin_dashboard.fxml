@@ -3,88 +3,91 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.vehiclemaintenance.controller.AdminDashboardController" spacing="10" prefWidth="800">
-    <children>
-        <HBox spacing="10" alignment="CENTER">
-            <Label fx:id="totalServicesLabel" text="Total Services Completed: 0"/>
-            <Label fx:id="mostRequestedLabel" text="Most Requested Service: N/A"/>
-            <Button text="Logout" onAction="#logout"/>
-        </HBox>
-        <TabPane fx:id="tabPane">
-            <!-- Recent Completed Services Tab -->
-            <Tab text="Recent Completed Services" closable="false">
-                <VBox spacing="10">
-                    <TableView fx:id="servicesTable" prefWidth="780">
+      fx:controller="com.vehiclemaintenance.controller.AdminDashboardController" spacing="10" prefWidth="800" style="-fx-background-color: linear-gradient(to bottom, #E8F0FE, #D2E3FC); -fx-padding: 10;">
+    <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
+        <Button text="Refresh" onAction="#refreshServicesAndJobs" style="-fx-background-color: #4A90E2; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 8 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" styleClass="button"/>
+        <Button fx:id="logout" text="Logout" onAction="#logout" style="-fx-background-color: #D32F2F; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 8 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" styleClass="button"/>
+    </HBox>
+    <TabPane fx:id="adminPane" prefWidth="780" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5); -fx-border-color: #CCCCCC; -fx-border-radius: 10;">
+        <Tab text="Services and Jobs" closable="false">
+            <SplitPane orientation="VERTICAL" dividerPositions="0.5">
+                <VBox spacing="10" style="-fx-padding: 10;">
+                    <Label text="Current Jobs" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1E3A8A;"/>
+                    <TableView fx:id="currentJobsTable" prefWidth="780" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-color: #CCCCCC; -fx-border-radius: 5;">
                         <columns>
-                            <TableColumn fx:id="serviceIdColumn" text="Service ID" prefWidth="100"/>
-                            <TableColumn fx:id="vehiclePlateColumn" text="Vehicle (Plate)" prefWidth="150"/>
-                            <TableColumn fx:id="serviceTypeColumn" text="Service Type" prefWidth="200"/>
-                            <TableColumn fx:id="mechanicColumn" text="Mechanic" prefWidth="150"/>
-                            <TableColumn fx:id="dateColumn" text="Date" prefWidth="150"/>
+                            <TableColumn fx:id="jobCustomerColumn" text="Customer" prefWidth="200" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                            <TableColumn fx:id="jobPlateColumn" text="Vehicle (Plate)" prefWidth="150" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                            <TableColumn fx:id="jobServiceTypeColumn" text="Service Type" prefWidth="150" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                            <TableColumn fx:id="jobStatusColumn" text="Status" prefWidth="150" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                            <TableColumn fx:id="jobMechanicColumn" text="Mechanic" prefWidth="150" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
                         </columns>
                     </TableView>
                 </VBox>
-            </Tab>
-            <!-- Customers and Vehicles Tab -->
-            <Tab text="Customers and Vehicles" closable="false">
-                <VBox spacing="10">
-                    <HBox spacing="10">
-                        <TextField fx:id="searchField" promptText="Search by Name or Plate" onAction="#searchCustomers"/>
-                        <Button text="Search" onAction="#searchCustomers"/>
-                        <Button text="Clear Search" onAction="#clearSearch"/>
-                    </HBox>
-                    <Label text="List of Customers"/>
-                    <TableView fx:id="customersTable" prefWidth="780">
+                <VBox spacing="10" style="-fx-padding: 10;">
+                    <Label text="Recently Completed Services" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1E3A8A;"/>
+                    <TableView fx:id="servicesTable" prefWidth="780" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-color: #CCCCCC; -fx-border-radius: 5;">
                         <columns>
-                            <TableColumn fx:id="customerIdColumn" text="Customer ID" prefWidth="100"/>
-                            <TableColumn fx:id="nameColumn" text="Name" prefWidth="200"/>
-                            <TableColumn fx:id="contactInfoColumn" text="Contact Info" prefWidth="300"/>
-                            <TableColumn fx:id="vehiclesCountColumn" text="# Vehicles" prefWidth="100"/>
+                            <TableColumn fx:id="serviceIdColumn" text="Service ID" prefWidth="100" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                            <TableColumn fx:id="vehiclePlateColumn" text="Vehicle (Plate)" prefWidth="150" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                            <TableColumn fx:id="serviceTypeColumn" text="Service Type" prefWidth="200" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                            <TableColumn fx:id="mechanicColumn" text="Mechanic" prefWidth="150" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                            <TableColumn fx:id="dateColumn" text="Date" prefWidth="150" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
                         </columns>
                     </TableView>
                     <HBox spacing="10">
-                        <Button text="Add Customer" onAction="#addCustomer"/>
-                        <Button text="Edit Customer" onAction="#editCustomer"/>
-                        <Button text="Delete Customer" onAction="#deleteCustomer"/>
-                    </HBox>
-                    <Label text="Customer's Vehicles"/>
-                    <TableView fx:id="vehiclesTable" prefWidth="780">
-                        <columns>
-                            <TableColumn fx:id="vehicleIdColumn" text="Vehicle ID" prefWidth="100"/>
-                            <TableColumn fx:id="makeColumn" text="Make" prefWidth="150"/>
-                            <TableColumn fx:id="modelColumn" text="Model" prefWidth="150"/>
-                            <TableColumn fx:id="yearColumn" text="Year" prefWidth="100"/>
-                            <TableColumn fx:id="plateColumn" text="Plate Number" prefWidth="150"/>
-                        </columns>
-                    </TableView>
-                    <HBox spacing="10">
-                        <Button text="Add Vehicle" onAction="#addVehicle"/>
-                        <Button text="Edit Vehicle" onAction="#editVehicle"/>
-                        <Button text="Delete Vehicle" onAction="#deleteVehicle"/>
-                    </HBox>
-                    <Label text="Vehicle Details and Service History"/>
-                    <HBox spacing="10">
-                        <TextArea fx:id="vehicleDetailsArea" editable="false" prefWidth="380" prefHeight="150"/>
-                        <VBox spacing="10">
-                            <Label text="Assign Mechanic"/>
-                            <ComboBox fx:id="mechanicComboBox" prefWidth="200"/>
-                            <Button text="Assign" onAction="#assignMechanic"/>
-                        </VBox>
+                        <Label fx:id="totalServicesLabel" text="Total Services Completed: 0" style="-fx-font-size: 14px; -fx-text-fill: #333; -fx-background-color: #E8F0FE; -fx-background-radius: 5; -fx-padding: 5 10;"/>
+                        <Label fx:id="mostRequestedLabel" text="Most Requested Service: N/A" style="-fx-font-size: 14px; -fx-text-fill: #333; -fx-background-color: #E8F0FE; -fx-background-radius: 5; -fx-padding: 5 10;"/>
                     </HBox>
                 </VBox>
-            </Tab>
-            <!-- Current Jobs Tab -->
-            <Tab text="Current Jobs" closable="false">
-                <VBox spacing="10">
-                    <TableView fx:id="currentJobsTable" prefWidth="780">
+            </SplitPane>
+        </Tab>
+        <Tab text="Customers and Vehicles" closable="false">
+            <SplitPane orientation="HORIZONTAL" dividerPositions="0.5">
+                <VBox spacing="10" minWidth="200" style="-fx-padding: 10;">
+                    <HBox spacing="10">
+                        <TextField fx:id="searchField" layoutX="10" layoutY="650" prefWidth="300" promptText="Enter name, email, or phone" style="-fx-background-color: #F5F5F5; -fx-background-radius: 5; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-padding: 8;"/>
+                        <Button text="Clear Search" onAction="#clearSearch" style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-size: 12px; -fx-background-radius: 5; -fx-padding: 8 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" styleClass="button"/>
+                    </HBox>
+                    <Label text="Customers" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1E3A8A;"/>
+                    <TableView fx:id="customersTable" layoutX="10" layoutY="10" prefHeight="400" prefWidth="600" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-color: #CCCCCC; -fx-border-radius: 5;">
                         <columns>
-                            <TableColumn fx:id="jobCustomerColumn" text="Customer" prefWidth="200"/>
-                            <TableColumn fx:id="jobPlateColumn" text="Vehicle (Plate)" prefWidth="150"/>
-                            <TableColumn fx:id="jobStatusColumn" text="Status" prefWidth="150"/>
+                            <TableColumn fx:id="nameColumn" text="Name" prefWidth="120" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                            <TableColumn fx:id="emailColumn" text="Email" prefWidth="200" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                            <TableColumn fx:id="phoneColumn" text="Phone" prefWidth="120" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                            <TableColumn fx:id="vehiclesCountColumn" text="Vehicles" prefWidth="60" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
                         </columns>
                     </TableView>
+                    <HBox spacing="10">
+                        <Button text="Add Customer" onAction="#addCustomer" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px; -fx-background-radius: 5; -fx-padding: 8 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" styleClass="button"/>
+                        <Button text="Edit Customer" onAction="#editCustomer" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 12px; -fx-background-radius: 5; -fx-padding: 8 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" styleClass="button"/>
+                        <Button text="Delete Customer" onAction="#deleteCustomer" style="-fx-background-color: #D32F2F; -fx-text-fill: white; -fx-font-size: 12px; -fx-background-radius: 5; -fx-padding: 8 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" styleClass="button"/>
+                    </HBox>
                 </VBox>
-            </Tab>
-        </TabPane>
-    </children>
+                <VBox spacing="10" minWidth="200" style="-fx-padding: 10;">
+                    <Label text="Vehicles" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1E3A8A;"/>
+                    <TableView fx:id="vehiclesTable" layoutX="10" layoutY="420" prefHeight="200" prefWidth="600" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-color: #CCCCCC; -fx-border-radius: 5;">
+                        <columns>
+                            <TableColumn fx:id="vehicleIdColumn" text="Vehicle ID" prefWidth="80" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                            <TableColumn fx:id="makeColumn" text="Make" prefWidth="120" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                            <TableColumn fx:id="modelColumn" text="Model" prefWidth="120" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                            <TableColumn fx:id="yearColumn" text="Year" prefWidth="70" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                            <TableColumn fx:id="plateColumn" text="Plate" prefWidth="100" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                        </columns>
+                    </TableView>
+                    <HBox spacing="10">
+                        <Button text="Add Vehicle" onAction="#addVehicle" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 12px; -fx-background-radius: 5; -fx-padding: 8 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" styleClass="button"/>
+                        <Button text="Edit Vehicle" onAction="#editVehicle" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 12px; -fx-background-radius: 5; -fx-padding: 8 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" styleClass="button"/>
+                        <Button text="Delete Vehicle" onAction="#deleteVehicle" style="-fx-background-color: #D32F2F; -fx-text-fill: white; -fx-font-size: 12px; -fx-background-radius: 5; -fx-padding: 8 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" styleClass="button"/>
+                    </HBox>
+                    <Label text="Vehicle Details" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1E3A8A;"/>
+                    <TextArea fx:id="vehicleDetailsArea" editable="false" prefWidth="380" prefHeight="150" style="-fx-background-color: #F5F5F5; -fx-background-radius: 5; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-padding: 8;"/>
+                    <HBox spacing="10">
+                        <Label text="Assign Mechanic:" style="-fx-font-size: 14px; -fx-text-fill: #333;"/>
+                        <ComboBox fx:id="mechanicComboBox" prefWidth="200" style="-fx-background-color: #F5F5F5; -fx-background-radius: 5; -fx-border-color: #CCCCCC; -fx-border-radius: 5;"/>
+                        <Button text="Assign" onAction="#assignMechanic" style="-fx-background-color: #4A90E2; -fx-text-fill: white; -fx-font-size: 12px; -fx-background-radius: 5; -fx-padding: 8 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" styleClass="button"/>
+                    </HBox>
+                </VBox>
+            </SplitPane>
+        </Tab>
+    </TabPane>
 </VBox>

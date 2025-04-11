@@ -1,0 +1,334 @@
+===== Vehicle Maintenance System Backend Code (Oracle SQL Developer) =====
+
+===== 1. Database Schema (Oracle SQL Developer) =====
+
+-- Create Tables
+
+-- Mechanic Table (renamed from Mechanics)
+CREATE TABLE Mechanic (
+    MechanicID NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    FirstName VARCHAR2(50) NOT NULL,
+    LastName VARCHAR2(50) NOT NULL
+);
+
+-- UserMechanicMapping Table (for login credentials)
+CREATE TABLE UserMechanicMapping (
+    Username VARCHAR2(50) PRIMARY KEY,
+    Password VARCHAR2(255) NOT NULL,
+    MechanicID NUMBER NOT NULL,
+    IsAdmin NUMBER(1) DEFAULT 0 CHECK (IsAdmin IN (0, 1)),
+    CONSTRAINT fk_usermechanic_mechanic FOREIGN KEY (MechanicID) REFERENCES Mechanic(MechanicID)
+);
+
+-- Customers Table
+CREATE TABLE Customers (
+    CustomerID NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    FirstName VARCHAR2(50) NOT NULL,
+    LastName VARCHAR2(50) NOT NULL,
+    Email VARCHAR2(100) UNIQUE NOT NULL,
+    Phone VARCHAR2(20) UNIQUE NOT NULL
+);
+
+-- Vehicle Table (renamed from Vehicles)
+CREATE TABLE Vehicle (
+    VehicleID NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    CustomerID NUMBER NOT NULL,
+    Make VARCHAR2(50) NOT NULL,
+    Model VARCHAR2(50) NOT NULL,
+    Year NUMBER NOT NULL,
+    Plate VARCHAR2(20) UNIQUE NOT NULL,
+    CONSTRAINT fk_vehicle_customer FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID) ON DELETE CASCADE
+);
+
+-- ServiceRecords Table (tracks services for vehicles, ServiceType is now a VARCHAR2)
+CREATE TABLE ServiceRecord (
+    ServiceID NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    VehicleID NUMBER NOT NULL,
+    MechanicID NUMBER,
+    ServiceType VARCHAR2(100) NOT NULL,
+    ServiceDate DATE NOT NULL,
+    Status VARCHAR2(20) DEFAULT 'Pending' CHECK (Status IN ('Pending', 'Ongoing', 'Completed')),
+    Description VARCHAR2(4000),
+    CONSTRAINT fk_service_vehicle FOREIGN KEY (VehicleID) REFERENCES Vehicle(VehicleID) ON DELETE CASCADE,
+    CONSTRAINT fk_service_mechanic FOREIGN KEY (MechanicID) REFERENCES Mechanic(MechanicID) ON DELETE SET NULL
+);
+
+-- Sample Data
+INSERT INTO Mechanic (FirstName, LastName) VALUES
+('Admin', 'User');
+INSERT INTO Mechanic (FirstName, LastName) VALUES
+('John', 'Doe');
+
+INSERT INTO UserMechanicMapping (Username, Password, MechanicID, IsAdmin) VALUES
+('admin', 'admin', 1, 1);
+INSERT INTO UserMechanicMapping (Username, Password, MechanicID, IsAdmin) VALUES
+('mechanic', 'mechanic', 2, 0);
+
+INSERT INTO Customers (FirstName, LastName, Email, Phone) VALUES
+('Alice', 'Smith', 'alice@example.com', '555-0101');
+INSERT INTO Customers (FirstName, LastName, Email, Phone) VALUES
+('Bob', 'Johnson', 'bob@example.com', '555-0102');
+
+INSERT INTO Vehicle (CustomerID, Make, Model, Year, Plate) VALUES
+(1, 'Toyota', 'Camry', 2019, 'ABC123');
+INSERT INTO Vehicle (CustomerID, Make, Model, Year, Plate) VALUES
+(2, 'Honda', 'Civic', 2020, 'XYZ789');
+
+INSERT INTO ServiceRecord (VehicleID, MechanicID, ServiceType, ServiceDate, Status, Description) VALUES
+(1, 2, 'Oil Change', TO_DATE('2025-04-01', 'YYYY-MM-DD'), 'Pending', 'Oil change requested');
+INSERT INTO ServiceRecord (VehicleID, MechanicID, ServiceType, ServiceDate, Status, Description) VALUES
+(1, 2, 'Tire Rotation', TO_DATE('2025-04-02', 'YYYY-MM-DD'), 'Ongoing', 'Tire rotation in progress');
+INSERT INTO ServiceRecord (VehicleID, MechanicID, ServiceType, ServiceDate, Status, Description) VALUES
+(2, 2, 'Brake Inspection', TO_DATE('2025-03-15', 'YYYY-MM-DD'), 'Completed', 'Brake inspection completed');
+
+===== 2. Stored Procedures (PL/SQL - Oracle SQL Developer) =====
+
+-- GetAssignedTasks: Fetches pending/ongoing tasks for a mechanic
+CREATE OR REPLACE PROCEDURE GetAssignedTasks (
+    p_MechanicID IN NUMBER,
+    p_Result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_Result FOR
+        SELECT 
+            sr.ServiceID,
+            sr.Description,
+            v.Plate AS Vehicle,
+            CONCAT(c.FirstName, ' ', c.LastName) AS Customer,
+            sr.ServiceType,
+            sr.ServiceDate,
+            sr.Status
+        FROM ServiceRecord sr
+        JOIN Vehicle v ON sr.VehicleID = v.VehicleID
+        JOIN Customers c ON v.CustomerID = c.CustomerID
+        WHERE (p_MechanicID = 0 OR sr.MechanicID = p_MechanicID)
+        AND sr.Status IN ('Pending', 'Ongoing')
+        ORDER BY sr.ServiceDate;
+END GetAssignedTasks;
+/
+
+-- UpdateServiceStatus: Updates the status of a service record
+CREATE OR REPLACE PROCEDURE UpdateServiceStatus (
+    p_ServiceID IN NUMBER,
+    p_NewStatus IN VARCHAR2
+) AS
+    v_Count NUMBER;
+BEGIN
+    UPDATE ServiceRecord
+    SET Status = p_NewStatus
+    WHERE ServiceID = p_ServiceID;
+
+    SELECT COUNT(*) INTO v_Count
+    FROM ServiceRecord
+    WHERE ServiceID = p_ServiceID;
+
+    IF v_Count = 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Service record not found');
+    END IF;
+
+    COMMIT;
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+END UpdateServiceStatus;
+/
+
+-- GetTotalServicesCompleted: Gets the total number of completed services
+CREATE OR REPLACE PROCEDURE GetTotalServicesCompleted (
+    p_Total OUT NUMBER
+) AS
+BEGIN
+    SELECT COUNT(*)
+    INTO p_Total
+    FROM ServiceRecord
+    WHERE Status = 'Completed';
+END GetTotalServicesCompleted;
+/
+
+-- GetMostRequestedService: Gets the most requested service type
+CREATE OR REPLACE PROCEDURE GetMostRequestedService (
+    p_ServiceName OUT VARCHAR2
+) AS
+BEGIN
+    SELECT ServiceType
+    INTO p_ServiceName
+    FROM ServiceRecord
+    GROUP BY ServiceType
+    ORDER BY COUNT(*) DESC
+    FETCH FIRST 1 ROW ONLY;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        p_ServiceName := 'N/A';
+END GetMostRequestedService;
+/
+
+===== 3. Java Code (DAO Classes) =====
+
+--- ServiceRecord.java (Model Class) ---
+package com.vehiclemaintenance.models;
+
+import java.util.Date;
+
+public class ServiceRecord {
+    private long serviceId;
+    private String vehiclePlate;
+    private String customerName;
+    private String serviceType;
+    private Date serviceDate;
+    private String status;
+    private String description;
+
+    public long getServiceId() { return serviceId; }
+    public void setServiceId(long serviceId) { this.serviceId = serviceId; }
+
+    public String getVehiclePlate() { return vehiclePlate; }
+    public void setVehiclePlate(String vehiclePlate) { this.vehiclePlate = vehiclePlate; }
+
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
+
+    public String getServiceType() { return serviceType; }
+    public void setServiceType(String serviceType) { this.serviceType = serviceType; }
+
+    public Date getServiceDate() { return serviceDate; }
+    public void setServiceDate(Date serviceDate) { this.serviceDate = serviceDate; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+}
+
+--- ServiceRecordDAO.java ---
+package com.vehiclemaintenance.dao;
+
+import com.vehiclemaintenance.models.ServiceRecord;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ServiceRecordDAO {
+    private static final String DB_URL = "jdbc:oracle:thin:@localhost:1521:orcl";
+    private static final String DB_USER = "yourusername";
+    private static final String DB_PASSWORD = "yourpassword";
+
+    private Connection getConnection() throws SQLException {
+        try {
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("Oracle JDBC Driver not found", e);
+        }
+        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+    }
+
+    public List<ServiceRecord> getAssignedTasks(long mechanicId) throws SQLException {
+        List<ServiceRecord> tasks = new ArrayList<>();
+        try (Connection conn = getConnection();
+             CallableStatement stmt = conn.prepareCall("{call GetAssignedTasks(?, ?)}")) {
+            stmt.setLong(1, mechanicId);
+            stmt.registerOutParameter(2, oracle.jdbc.OracleTypes.CURSOR);
+            stmt.execute();
+
+            ResultSet rs = (ResultSet) stmt.getObject(2);
+            while (rs.next()) {
+                ServiceRecord record = new ServiceRecord();
+                record.setServiceId(rs.getLong("ServiceID"));
+                record.setDescription(rs.getString("Description"));
+                record.setVehiclePlate(rs.getString("Vehicle"));
+                record.setCustomerName(rs.getString("Customer"));
+                record.setServiceType(rs.getString("ServiceType"));
+                record.setServiceDate(rs.getDate("ServiceDate"));
+                record.setStatus(rs.getString("Status"));
+                tasks.add(record);
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Failed to retrieve assigned tasks: " + e.getMessage(), e);
+        }
+        return tasks;
+    }
+
+    public void updateServiceStatus(long serviceId, String newStatus) throws SQLException {
+        try (Connection conn = getConnection();
+             CallableStatement stmt = conn.prepareCall("{call UpdateServiceStatus(?, ?)}")) {
+            stmt.setLong(1, serviceId);
+            stmt.setString(2, newStatus);
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new SQLException("Failed to update service status: " + e.getMessage(), e);
+        }
+    }
+
+    public int getTotalServicesCompleted() throws SQLException {
+        try (Connection conn = getConnection();
+             CallableStatement stmt = conn.prepareCall("{call GetTotalServicesCompleted(?)}")) {
+            stmt.registerOutParameter(1, Types.INTEGER);
+            stmt.execute();
+            return stmt.getInt(1);
+        } catch (SQLException e) {
+            throw new SQLException("Failed to get total services completed: " + e.getMessage(), e);
+        }
+    }
+
+    public String getMostRequestedService() throws SQLException {
+        try (Connection conn = getConnection();
+             CallableStatement stmt = conn.prepareCall("{call GetMostRequestedService(?)}")) {
+            stmt.registerOutParameter(1, Types.VARCHAR);
+            stmt.execute();
+            return stmt.getString(1);
+        } catch (SQLException e) {
+            throw new SQLException("Failed to get most requested service: " + e.getMessage(), e);
+        }
+    }
+}
+
+===== 4. Java Code (Frontend Controller Snippet for Module Integration) =====
+
+--- MechanicDashboardController.java (Snippet) ---
+package com.vehiclemaintenance.controller;
+
+import com.vehiclemaintenance.dao.ServiceRecordDAO;
+import com.vehiclemaintenance.models.ServiceRecord;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.control.TableView;
+
+public class MechanicDashboardController {
+    @FXML private TableView<ServiceRecord> tasksTable;
+    private ServiceRecordDAO serviceRecordDAO;
+    private long mechanicId;
+
+    @FXML
+    private void initialize() {
+        serviceRecordDAO = new ServiceRecordDAO();
+        loadTasks();
+    }
+
+    private void loadTasks() {
+        try {
+            tasksTable.setItems(FXCollections.observableArrayList(serviceRecordDAO.getAssignedTasks(mechanicId)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void markAsComplete() {
+        ServiceRecord selectedTask = tasksTable.getSelectionModel().getSelectedItem();
+        if (selectedTask != null) {
+            try {
+                serviceRecordDAO.updateServiceStatus(selectedTask.getServiceId(), "Completed");
+                loadTasks();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void setMechanicId(long mechanicId) {
+        this.mechanicId = mechanicId;
+    }
+}
+
+===== End of File =====

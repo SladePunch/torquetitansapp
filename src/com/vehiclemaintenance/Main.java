@@ -11,8 +11,10 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/login.fxml"));
         primaryStage.setTitle("Vehicle Maintenance Application");
-        primaryStage.setScene(new Scene(root, 800, 600)); // Set consistent size
+        primaryStage.setScene(new Scene(root, 500, 300)); // Set consistent size
         primaryStage.show();
+     // In Main.java
+        System.out.println("Stylesheet URL: " + getClass().getResource("/styles.css"));
     }
 
     @Override
@@ -23,4 +25,5 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
 }

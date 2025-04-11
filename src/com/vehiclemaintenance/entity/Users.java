@@ -6,25 +6,25 @@ import javax.persistence.*;
 @Table(name = "Users")
 public class Users {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
-    @SequenceGenerator(name = "users_seq", sequenceName = "Users_SEQ", allocationSize = 1)
+    @Column(name = "UserID")
     private Long userId;
 
-    @Column(name = "Username", nullable = false, unique = true)
+    @Column(name = "Username")
     private String username;
 
-    @Column(name = "Password", nullable = false)
+    @Column(name = "Password")
     private String password;
 
-    @Column(name = "Email", nullable = false, unique = true)
+    @Column(name = "Email")
     private String email;
 
-    @ManyToOne
-    @JoinColumn(name = "RoleID", nullable = false)
-    private Role role;
+    @Column(name = "RoleID")
+    private Long roleId;
 
+    // Constructors
     public Users() {}
 
+    // Getters and Setters
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
     public String getUsername() { return username; }
@@ -33,6 +33,6 @@ public class Users {
     public void setPassword(String password) { this.password = password; }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-    public Role getRole() { return role; }
-    public void setRole(Role role) { this.role = role; }
+    public Long getRoleId() { return roleId; }
+    public void setRoleId(Long roleId) { this.roleId = roleId; }
 }

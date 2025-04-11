@@ -20,7 +20,7 @@
         <mapping class="com.vehiclemaintenance.entity.Vehicle"/>
         <mapping class="com.vehiclemaintenance.entity.Mechanic"/>
         <mapping class="com.vehiclemaintenance.entity.ServiceRecord"/>
-        <mapping class="com.vehiclemaintenance.entity.MaintenanceSchedule"/>
+        <mapping class="com.vehiclemaintenance.entity.UserMechanicMapping"/>
         <!-- Add other entity mappings as needed -->
     </session-factory>
 </hibernate-configuration>
