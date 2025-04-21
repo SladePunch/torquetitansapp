@@ -3,38 +3,40 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.vehiclemaintenance.controller.MechanicDashboardController" style="-fx-background-color: linear-gradient(to bottom, #E8F0FE, #D2E3FC);">
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="com.vehiclemaintenance.controller.MechanicDashboardController"
+            stylesheets="@/styles.css">
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10; -fx-background-color: white; -fx-border-color: #CCCCCC; -fx-border-width: 0 0 1 0;">
-            <Label fx:id="welcomeLabel" text="Welcome, Mechanic" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1E3A8A; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"/>
+        <HBox alignment="CENTER" spacing="10">
+            <Label fx:id="welcomeLabel" text="Welcome, Mechanic" styleClass="label welcome-title"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button fx:id="logoutButton" text="Logout" onAction="#logout" style="-fx-background-color: #D32F2F; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 8 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"/>
+            <Button fx:id="logoutButton" text="Logout" onAction="#logout" styleClass="button logout"/>
         </HBox>
     </top>
     <center>
-        <VBox fx:id="mechanicPane" spacing="10" style="-fx-padding: 10;">
-            <Label text="Pending/Ongoing Tasks" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1E3A8A;"/>
-            <TableView fx:id="tasksTable" prefHeight="200.0" prefWidth="1000.0" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5);">
+        <VBox fx:id="mechanicPane" spacing="10" alignment="CENTER">
+            <Label fx:id="title" text="Pending/Ongoing Tasks"/>
+            <TableView fx:id="tasksTable" prefHeight="200.0" prefWidth="1000.0">
                 <columns>
-                    <TableColumn fx:id="descriptionColumn" prefWidth="200.0" text="Description" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
-                    <TableColumn fx:id="vehicleColumn" prefWidth="150.0" text="Vehicle" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
-                    <TableColumn fx:id="customerColumn" prefWidth="150.0" text="Customer" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
-                    <TableColumn fx:id="serviceDateColumn" prefWidth="100.0" text="Service Date" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
-                    <TableColumn fx:id="statusColumn" prefWidth="100.0" text="Status" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                    <TableColumn fx:id="descriptionColumn" prefWidth="200.0" text="Description"/>
+                    <TableColumn fx:id="vehicleColumn" prefWidth="150.0" text="Vehicle"/>
+                    <TableColumn fx:id="customerColumn" prefWidth="150.0" text="Customer"/>
+                    <TableColumn fx:id="serviceDateColumn" prefWidth="100.0" text="Service Date"/>
+                    <TableColumn fx:id="statusColumn" prefWidth="100.0" text="Status"/>
                 </columns>
             </TableView>
-            <HBox spacing="10" style="-fx-padding: 10px;">
-                <Button fx:id="markOngoingButton" text="Mark as Ongoing" onAction="#markAsOngoing" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 8 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"/>
-                <Button fx:id="markCompleteButton" text="Mark as Complete" onAction="#markAsComplete" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 5; -fx-padding: 8 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"/>
+            <HBox spacing="10">
+                <Button fx:id="markOngoingButton" text="Mark as Ongoing" onAction="#markAsOngoing" styleClass="button mark-ongoing"/>
+                <Button fx:id="markCompleteButton" text="Mark as Complete" onAction="#markAsComplete" styleClass="button mark-complete"/>
             </HBox>
-            <Label text="Completed Tasks" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1E3A8A;"/>
-            <TableView fx:id="completedTasksTable" prefHeight="200.0" prefWidth="1000.0" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-color: #CCCCCC; -fx-border-radius: 5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5);">
+            <Label fx:id="title" text="Completed Tasks"/>
+            <TableView fx:id="completedTasksTable" prefHeight="200.0" prefWidth="1000.0">
                 <columns>
-                    <TableColumn fx:id="completedDescriptionColumn" prefWidth="200.0" text="Description" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
-                    <TableColumn fx:id="completedVehicleColumn" prefWidth="150.0" text="Vehicle" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
-                    <TableColumn fx:id="completedCustomerColumn" prefWidth="150.0" text="Customer" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
-                    <TableColumn fx:id="completedServiceDateColumn" prefWidth="100.0" text="Service Date" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
-                    <TableColumn fx:id="completedStatusColumn" prefWidth="100.0" text="Status" style="-fx-alignment: CENTER; -fx-background-color: #F5F5F5; -fx-text-fill: #333;"/>
+                    <TableColumn fx:id="completedDescriptionColumn" prefWidth="200.0" text="Description"/>
+                    <TableColumn fx:id="completedVehicleColumn" prefWidth="150.0" text="Vehicle"/>
+                    <TableColumn fx:id="completedCustomerColumn" prefWidth="150.0" text="Customer"/>
+                    <TableColumn fx:id="completedServiceDateColumn" prefWidth="100.0" text="Service Date"/>
+                    <TableColumn fx:id="completedStatusColumn" prefWidth="100.0" text="Status"/>
                 </columns>
             </TableView>
         </VBox>
