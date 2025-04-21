@@ -61,7 +61,7 @@ public class LoginController {
             mechanicController.setCurrentUser(user);
         }
 
-        stage.setScene(new Scene(root, 1050, 600));
+        stage.setScene(new Scene(root, 1280, 720));
         stage.setTitle(roleTitle + " Dashboard");
     }   
 }

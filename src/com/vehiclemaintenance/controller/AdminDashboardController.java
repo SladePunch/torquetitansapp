@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.hibernate.Session;
@@ -383,43 +384,37 @@ public class AdminDashboardController {
 
         dialog.getDialogPane().setContent(grid);
 
-        // Enable/Disable Add button based on input
+     // Enable/Disable Add button based on input validation
         Button addButton = (Button) dialog.getDialogPane().lookupButton(addButtonType);
-        addButton.setDisable(true);
 
-        // Add validation to ensure all fields are filled
-        nameField.textProperty().addListener((obs, oldValue, newValue) -> {
-            addButton.setDisable(
-                nameField.getText().trim().isEmpty() ||
-                emailField.getText().trim().isEmpty() ||
-                phoneField.getText().trim().isEmpty()
-            );
-        });
 
-        emailField.textProperty().addListener((obs, oldValue, newValue) -> {
-            addButton.setDisable(
-                nameField.getText().trim().isEmpty() ||
-                emailField.getText().trim().isEmpty() ||
-                phoneField.getText().trim().isEmpty()
-            );
-        });
-
-        phoneField.textProperty().addListener((obs, oldValue, newValue) -> {
-            addButton.setDisable(
-                nameField.getText().trim().isEmpty() ||
-                emailField.getText().trim().isEmpty() ||
-                phoneField.getText().trim().isEmpty()
-            );
-        });
 
         // Show the dialog and process the result
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == addButtonType) {
             try {
+                String name = nameField.getText().trim();
+                String email = emailField.getText().trim();
+                String phone = phoneField.getText().trim();
+
+                // Validate email format
+                String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+                if (!Pattern.matches(emailRegex, email)) {
+                    showErrorAlert("Invalid Email", "Please enter a valid email address (e.g., example@domain.com).");
+                    dialog.showAndWait();
+                }
+
+                // Validate phone number (at least 10 digits)
+                String digitsOnly = phone.replaceAll("[^0-9]", "");
+                if (!Pattern.matches("\\d{10,}", digitsOnly)) {
+                    showErrorAlert("Invalid Phone Number", "Phone number must contain at least 10 digits.");
+                    dialog.showAndWait();
+                }
+
                 Customer newCustomer = new Customer();
-                newCustomer.setName(nameField.getText().trim());
-                newCustomer.setEmail(emailField.getText().trim());
-                newCustomer.setPhone(phoneField.getText().trim());
+                newCustomer.setName(name);
+                newCustomer.setEmail(email);
+                newCustomer.setPhone(phone);
 
                 customerDAO.addCustomer(newCustomer);
 
@@ -469,8 +464,26 @@ public class AdminDashboardController {
         phoneField.setPromptText("Phone");
         VBox content = new VBox(10, nameField, emailField, phoneField);
         dialogPane.setContent(content);
-
+        
         dialog.showAndWait().ifPresent(name -> {
+        	
+        	String email = emailField.getText().trim();
+            String phone = phoneField.getText().trim();
+
+            // Validate email format
+            String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+            if (!Pattern.matches(emailRegex, email)) {
+                showErrorAlert("Invalid Email", "Please enter a valid email address (e.g., example@domain.com).");
+                return;
+            }
+
+            // Validate phone number (at least 10 digits)
+            String digitsOnly = phone.replaceAll("[^0-9]", "");
+            if (!Pattern.matches("\\d{10,}", digitsOnly)) {
+                showErrorAlert("Invalid Phone Number", "Phone number must contain at least 10 digits.");
+                return;
+            }
+        	
             selected.setName(name);
             selected.setEmail(emailField.getText());
             selected.setPhone(phoneField.getText());
@@ -551,60 +564,21 @@ public class AdminDashboardController {
 
         dialog.getDialogPane().setContent(grid);
 
-        // Enable/Disable Add button based on input
+        // Enable/Disable Add button based on input validation
         Button addButton = (Button) dialog.getDialogPane().lookupButton(addButtonType);
-        addButton.setDisable(true);
-
-        // Add validation to ensure all fields are filled
-        licensePlateField.textProperty().addListener((obs, oldValue, newValue) -> {
-            addButton.setDisable(
-                makeField.getText().trim().isEmpty() ||
-                modelField.getText().trim().isEmpty() ||
-                yearField.getText().trim().isEmpty() ||
-                licensePlateField.getText().trim().isEmpty()
-            );
-        });
-
-        makeField.textProperty().addListener((obs, oldValue, newValue) -> {
-            addButton.setDisable(
-                makeField.getText().trim().isEmpty() ||
-                modelField.getText().trim().isEmpty() ||
-                yearField.getText().trim().isEmpty() ||
-                licensePlateField.getText().trim().isEmpty()
-            );
-        });
-
-        modelField.textProperty().addListener((obs, oldValue, newValue) -> {
-            addButton.setDisable(
-                makeField.getText().trim().isEmpty() ||
-                modelField.getText().trim().isEmpty() ||
-                yearField.getText().trim().isEmpty() ||
-                licensePlateField.getText().trim().isEmpty()
-            );
-        });
-
-        yearField.textProperty().addListener((obs, oldValue, newValue) -> {
-            addButton.setDisable(
-                makeField.getText().trim().isEmpty() ||
-                modelField.getText().trim().isEmpty() ||
-                yearField.getText().trim().isEmpty() ||
-                licensePlateField.getText().trim().isEmpty()
-            );
-        });
 
         // Show the dialog and process the result
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == addButtonType) {
             try {
-                // Validate fields again (just to be safe)
                 String make = makeField.getText().trim();
                 String model = modelField.getText().trim();
                 String yearText = yearField.getText().trim();
                 String licensePlate = licensePlateField.getText().trim();
 
-                if (make.isEmpty() || model.isEmpty() || yearText.isEmpty() || licensePlate.isEmpty()) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "All fields are required.");
-                    alert.showAndWait();
+                // Validate year (exactly 4 digits)
+                if (!Pattern.matches("\\d{4}", yearText)) {
+                    showErrorAlert("Invalid Year", "Year must be exactly 4 digits (e.g., 2023).");
                     return;
                 }
 
@@ -612,16 +586,8 @@ public class AdminDashboardController {
                 newVehicle.setOwner(selectedCustomer);
                 newVehicle.setMake(make);
                 newVehicle.setModel(model);
+                newVehicle.setYear(Integer.parseInt(yearText));
                 newVehicle.setLicensePlate(licensePlate);
-
-                // Validate and set the year
-                try {
-                    newVehicle.setYear(Integer.parseInt(yearText));
-                } catch (NumberFormatException e) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Year must be a valid number.");
-                    alert.showAndWait();
-                    return;
-                }
 
                 vehicleDAO.addVehicle(newVehicle);
 
@@ -749,6 +715,11 @@ public class AdminDashboardController {
                 if (make.isEmpty() || model.isEmpty() || yearText.isEmpty() || licensePlate.isEmpty()) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, "All fields are required.");
                     alert.showAndWait();
+                    return;
+                }
+                
+                if (!Pattern.matches("\\d{4}", yearText)) {
+                    showErrorAlert("Invalid Year", "Year must be exactly 4 digits (e.g., 2023).");
                     return;
                 }
 
@@ -897,5 +868,44 @@ public class AdminDashboardController {
             System.err.println("Error during logout: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    
+    // Helper method to validate customer fields
+    private boolean validateCustomerFields(String name, String email, String phone) {
+        if (name == null || name.trim().isEmpty()) return false;
+        if (email == null || email.trim().isEmpty()) return false;
+        if (phone == null || phone.trim().isEmpty()) return false;
+
+        // Validate email format
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+        if (!Pattern.matches(emailRegex, email)) return false;
+
+        // Validate phone number (at least 10 digits)
+        String digitsOnly = phone.replaceAll("[^0-9]", "");
+        if (!Pattern.matches("\\d{10,}", digitsOnly)) return false;
+
+        return true;
+    }
+
+    // Helper method to validate vehicle fields
+    private boolean validateVehicleFields(String make, String model, String year, String licensePlate) {
+        if (make == null || make.trim().isEmpty()) return false;
+        if (model == null || model.trim().isEmpty()) return false;
+        if (year == null || year.trim().isEmpty()) return false;
+        if (licensePlate == null || licensePlate.trim().isEmpty()) return false;
+
+        // Validate year (exactly 4 digits)
+        if (!Pattern.matches("\\d{4}", year)) return false;
+
+        return true;
+    }
+
+    // Helper method to show an error alert
+    private void showErrorAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
